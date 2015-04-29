@@ -1,0 +1,32 @@
+import scl.*;
+
+/**
+ * QueryIterator
+ **/
+component accessors=true output=false persistent=false extends=IndexedIterator {
+
+	property query data;
+	property array columns;
+
+	public function init(required query data) {
+		structAppend(variables,arguments);
+		this.setColumns(ListToArray(data.columnlist));
+		return this;
+	}
+
+	public any function current() {
+		if (this.getCurrentIndex() <= 0 || this.getCurrentIndex() > this.length())
+			return;
+		
+		var r = {};
+		for (var c in this.getColumns()) {
+			r[c] = this.getData()[c][this.getCurrentIndex()];
+		}
+		return r;
+	}
+	
+	public numeric function length() {
+		return this.getData().recordcount;
+	}
+
+}

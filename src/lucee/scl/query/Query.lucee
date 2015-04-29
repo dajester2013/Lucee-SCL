@@ -1,0 +1,24 @@
+/**
+ * Query
+ **/
+component {
+
+	public static PreparedStatement function prepareStatement(string statement, string datasource) {
+		return new PreparedStatement(argumentCollection=arguments);
+	}
+	
+	public static ResultSet function execute(string statement, any queryParams={}, struct options={}, struct scope={}) {
+		structAppend(local,scope);
+		
+		var result = {};
+		
+		if (isNull(options.result) || options.result != false) {
+			options.result = "result.meta";
+		}
+		
+		result.data = queryExecute(statement, queryParams, options);
+		
+		return new ResultSet(result.data, result.meta ?: {});
+	}
+	
+}

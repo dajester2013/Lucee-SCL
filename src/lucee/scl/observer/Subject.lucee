@@ -1,0 +1,9 @@
+import scl.observer.Observer;
+
+interface {
+	
+	public void attach(required Observer observer);
+	public void dettach(required Observer observer);
+	public void notify();
+	
+}

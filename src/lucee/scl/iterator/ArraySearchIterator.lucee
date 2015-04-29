@@ -1,0 +1,43 @@
+component extends=ArrayIterator accessors=true {
+	
+	property comparator;
+	
+	variables.nextFoundIdx = 0; 
+	
+	public function init(required array data, required comparator) {
+		structAppend(variables,arguments);
+		return this;
+	}
+	
+	/**
+	 * Search for the next item in the array using the configured comparator
+	 */
+	private void function findNextIndex() {
+		if (nextFoundIdx <= this.getCurrentIndex()) {
+			for (var i = this.getCurrentIndex()+1; i <= this.length()+1; i++) {
+				nextFoundIdx = i;
+				if (i > this.length() || comparator(this.getData()[i]) === true) {
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public boolean function hasNext() {
+		findNextIndex();
+		return nextFoundIdx <= this.length();
+	}
+	
+	/**
+	 * 
+	 */
+	public any function next() {
+		findNextIndex();
+		this.setCurrentIndex(nextFoundIdx);
+		return this.current();
+	}
+	
+}

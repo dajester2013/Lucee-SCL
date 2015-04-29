@@ -1,0 +1,10 @@
+/**
+ * Iterable
+ **/
+interface {
+	
+	public boolean function hasNext();
+	public any function next();
+	public any function current();
+	
+}

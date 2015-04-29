@@ -1,0 +1,7 @@
+import scl.observer.Subject;
+
+interface {
+	
+	public function notify(required Subject subject);
+	
+}

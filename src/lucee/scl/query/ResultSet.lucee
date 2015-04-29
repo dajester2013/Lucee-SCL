@@ -1,0 +1,57 @@
+import scl.*;
+
+/**
+ * ResultSet
+ **/
+component accessors=true implements=Countable,Iterable {
+	
+	property query data;
+	property struct meta;
+	
+	private internalIterator=null;
+	
+	public ResultSet function init(required query data, struct meta={}) {
+		this.setData(arguments.data);
+		this.setMeta(arguments.meta);
+		
+		internalIterator = new iterator.QueryIterator(data);
+		
+		return this;
+	}
+	
+	public void function each(required callback) {
+		var it = iterator();
+		var idx = 1;
+		while(it.hasNext()) {
+			var result = callback(it.next(), idx++) ?: true;
+			if (result === false) {
+				return false;
+			}
+		}
+	}
+	
+	public numeric function length() {
+		return data.recordcount;
+	}
+	
+	public function toArray() {
+		var aData = [];
+		for (row in data) {
+			aData.append(row);
+		}
+		return aData;
+	}
+	
+	public boolean function hasNext() {
+		return internalIterator.hasNext();
+	}
+	
+	public boolean function next() {
+		return internalIterator.next();
+	}
+	
+	public boolean function current() {
+		return internalIterator.current();
+	}
+	
+}

@@ -1,0 +1,122 @@
+/**
+ * Java
+ **/
+component accessors=true persistent=false {
+
+	static {
+		classPaths = {
+			_global = []
+		};
+	}
+	
+	/**
+	 * Add a jar or directory of jar files to the classpath
+	 * @path The full path to a jar file or directory.  If the path is to a directory, the directory is scanned recursively for *.jar files.
+	 * @classPath Allows you to use named classpaths.  Defaults to the global classpath.
+	 */
+	public static void function addClassPath(required string path, string classPath="_global") {
+		if (!fileExists(path)) {
+			if (directoryExists(path)) {
+				var paths = directoryList(path, true, "array", "*.jar");
+				
+				for (path in paths) {
+					static.addClassPath(path);
+				}
+			} else {
+				throw(type="scl.RuntimeException", message="The path #path# does not exist.");
+			}
+		} else if (!static.classPaths[classPath].findNoCase(path)) {
+			if (!structKeyExists(static.classPaths,classPath)) {
+				static.classPaths[classPath] = [];
+			}
+			static.classPaths[classPath].append(path);
+		}
+	}
+	
+	/**
+	 * Remove a jar or directory of jar files from the classpath
+	 * @path The full path to a jar file or directory.  If the path is to a directory, the directory is scanned recursively for *.jar files.
+	 * @classPath Allows you to use named classpaths.  Defaults to the global classpath.
+	 */
+	public static void function removeClassPath(required string path, string classPath="_global") {
+		if (!fileExists(path)) {
+			if (directoryExists(path)) {
+				var paths = directoryList(path, true, "array");
+				
+				for (path in paths) {
+					static.removeClassPath(path);
+				}
+			} else {
+				// to throw or not to throw, that is the question?
+			}
+		} else if (structKeyExists(static.classPaths,path)) {
+			static.classPaths[classPath].delete(path);
+		}
+	}
+	
+	/**
+	 * Returns all jars paths on the classpath
+	 * @classPath Allows you to create a named classpath.  Defaults to the global classpath.
+	 */
+	public static array function getClassPath(string classPath="_global") {
+		if (structKeyExists(static.classPaths,classPath)) {
+			return static.classPaths[classPath];
+		}
+	}
+	
+	/**
+	 * Return an uninitialized Proxy object for the given java class.
+	 * @jClass The java class name.
+	 * @classPath Allows you to create a named classpath.  Defaults to the global classpath.
+	 */
+	public static any function proxy(required string jClass, classPath="_global") {
+		return createObject("java",jClass,static.classPaths[classPath]);
+	}
+	
+	
+	/**
+	 * Return an initialized Proxy object for the given java class.
+	 * @jClass The java class name.
+	 * @cArgs An array of arguments to pass to the java class' constructor.
+	 * @classPath Allows you to create a named classpath.  Defaults to the global classpath.
+	 */
+	public static any function instance(required string jClass, array cArgs=[], classPath="_global") {
+		var proxy = static.proxy(jClass, classPath);
+		switch(cArgs.len()) {
+			case  0 : return proxy.init();
+			case  1 : return proxy.init(cArgs[1]);
+			case  2 : return proxy.init(cArgs[1],cArgs[2]);
+			case  3 : return proxy.init(cArgs[1],cArgs[2],cArgs[3]);
+			case  4 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4]);
+			case  5 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5]);
+			case  6 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6]);
+			case  7 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6],cArgs[7]);
+			case  8 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6],cArgs[7],cArgs[8]);
+			case  9 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6],cArgs[7],cArgs[8],cArgs[9]);
+			case 10 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6],cArgs[7],cArgs[8],cArgs[9],cArgs[10]);
+			case 11 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6],cArgs[7],cArgs[8],cArgs[9],cArgs[10],cArgs[11]);
+			case 12 : return proxy.init(cArgs[1],cArgs[2],cArgs[3],cArgs[4],cArgs[5],cArgs[6],cArgs[7],cArgs[8],cArgs[9],cArgs[10],cArgs[11],cArgs[12]);
+			
+			default : 
+				var evalargs = [];
+				for (var i=1; i <= cArgs.len(); i++) evalargs.push("cArgs[#i#]");
+				evaluate("proxy = proxy.init(#arrayToList(evalargs)#)");
+				return proxy;
+		}
+	}
+	
+	/**
+	 * Cast data to a given java type
+	 */
+	public static function cast(required string type, required any data) {
+		return JavaCast(type, data);
+	}
+	
+	/**
+	 * Get a java null
+	 */
+	public static function null() {
+		return JavaCast("null","");
+	}
+
+}

@@ -1,0 +1,8 @@
+/**
+ * Countable
+ **/
+interface {
+	
+	public numeric function length();
+	
+}

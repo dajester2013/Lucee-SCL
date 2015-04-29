@@ -1,0 +1,24 @@
+import scl.*;
+
+/**
+ * IndexedIterator
+ **/
+abstract component accessors=true output=false persistent=false implements="Iterable,Countable" {
+	
+	property numeric currentIndex default=0;
+	
+	public boolean function hasNext() {
+		return this.getCurrentIndex() < this.length();
+	}
+	
+	public any function next() {
+		if (this.getCurrentIndex() <= this.length())
+			this.setCurrentIndex(this.getCurrentIndex()+1);
+		return this.current();
+	}
+	
+	abstract public any function current();
+	
+	abstract public numeric function length();
+	
+}

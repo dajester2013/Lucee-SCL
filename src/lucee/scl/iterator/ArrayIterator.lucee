@@ -1,0 +1,26 @@
+import scl.*;
+
+/**
+ * ArrayIterator
+ **/
+component accessors=true output=false persistent=false extends=IndexedIterator {
+
+	property aray data;
+	
+	public function init(required array data) {
+		structAppend(variables,arguments);
+		return this;
+	}
+
+	public any function current() {
+		if (this.getCurrentIndex() <= 0 || this.getCurrentIndex() > this.length())
+			return;
+		
+		return this.getData()[this.getCurrentIndex()];
+	}
+	
+	public numeric function length() {
+		return this.getData().len();
+	}
+
+}

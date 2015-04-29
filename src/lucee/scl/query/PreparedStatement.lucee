@@ -1,0 +1,21 @@
+/**
+ * PreparedStatement
+ **/
+component accessors=true {
+	
+	property string statement;
+	property string datasource;
+	
+	public function init(string statement, string datasource) {
+		structAppend(variables,arguments);
+		return this;
+	}
+	
+	public function execute(params={}) {
+		return Query::execute(this.getStatement(), arguments.params, {
+			 datasource	= this.getDatasource()
+			,result		= true
+		});
+	}
+	
+}
