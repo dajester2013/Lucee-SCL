@@ -20,10 +20,9 @@ component accessors=true implements=Countable,Iterable {
 	}
 	
 	public void function each(required callback) {
-		var it = iterator();
 		var idx = 1;
-		while(it.hasNext()) {
-			var result = callback(it.next(), idx++) ?: true;
+		for (row in data) {
+			var result = callback(row, idx++) ?: true;
 			if (result === false) {
 				return false;
 			}
