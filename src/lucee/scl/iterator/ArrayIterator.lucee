@@ -5,7 +5,7 @@ import scl.*;
  **/
 component accessors=true output=false persistent=false extends=IndexedIterator {
 
-	property aray data;
+	property array data;
 	
 	public function init(required array data) {
 		structAppend(variables,arguments);
